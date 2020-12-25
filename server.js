@@ -68,14 +68,16 @@ function insertData(userId, cityCode) {
         // 接続
         connection.connect();
 
-        //SQL文
-        let sql = 'insert into user(user_id, city_code) values(?, ?);';
+        connection.query('select * from user where user_id = ?', userId, function(err, rows, result) {
+            //SQL文
+            let sql = 'update user set city_code = ? where user_id = ?;';
 
-        //データを挿入
-        connection.query(sql, [userId, cityCode], function(err, result) {
-            resolve(result);
-            console.log(result);
+            //データを挿入
+            connection.query(sql, [cityCode, userId], function(err, result) {
+                console.log(result);
+            });
         });
+
 
         // 接続終了
         connection.end();
