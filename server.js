@@ -113,7 +113,7 @@ function getCityCode(name) {
 
 //テンプレートメッセージを作る関数
 function createMessage(area) {
-    let templateMessage = require('../UserInformationRegistration/template.json'); //ラインのテンプレートメッセージのテンプレートのjsonファイルを取得
+    let templateMessage = require('./UserInformationRegistration/template.json'); //ラインのテンプレートメッセージのテンプレートのjsonファイルを取得
     let responseMessage = []; //返信内容
     templateMessage.template.actions = []; //templateMessageのアクションボタンを初期化
     let count = 0; //ボタンテンプレートメッセージのアクションオブジェクトの制限が4個なのでカウントする。
