@@ -1,0 +1,9 @@
+{
+    "type": "template",
+    "altText": "地域を選択してください",
+    "template": {
+        "type": "buttons",
+        "text": "地域を選択してください",
+        "actions": []
+    }
+}
