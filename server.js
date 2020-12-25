@@ -52,6 +52,7 @@ function connectionSql(sql, message) {
         connection.end();
     });
 }
+
 //ユーザーIDと地域のコードをuserデータベースに挿入する関数
 function insertData(userId, cityCode) {
     return new Promise(resolve => {
@@ -173,10 +174,10 @@ function getUserCode(userId) {
         const mysql = require('mysql');
         // MySQLとのコネクションの作成
         const connection = mysql.createConnection({
-            host: 'localhost',
-            user: 'Orangineer',
-            password: 'orange',
-            database: 'Unbreq'
+            host: 'us-cdbr-east-02.cleardb.com',
+            user: 'ba34e08d66d9ca',
+            password: 'f7a13d7b',
+            database: 'heroku_ce160c129bb4170'
         });
         // 接続
         connection.connect();
@@ -199,7 +200,7 @@ function getUserCode(userId) {
 
 
 // event handler
-function handleEvent(event) {
+async function handleEvent(event) {
     if (event.type !== 'message' || event.message.type !== 'text') {
         // ignore non-text-message event
         return Promise.resolve(null);
