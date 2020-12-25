@@ -69,9 +69,8 @@ function insertData(userId, cityCode) {
         connection.connect();
 
         //SQL文
-        let sql = 'insert into user(user_id, city_id) values(?, ?);';
-        console.log(userId);
-        console.log(cityCode);
+        let sql = 'insert into user(user_id, city_code) values(?, ?);';
+
         //データを挿入
         connection.query(sql, [userId, cityCode], function(err, result) {
             resolve(result);
