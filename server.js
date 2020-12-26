@@ -69,13 +69,24 @@ function insertData(userId, cityCode) {
         connection.connect();
 
         connection.query('select * from user where user_id = ?', userId, function(err, rows, result) {
-            //SQL文
-            let sql = 'update user set city_code = ? where user_id = ?;';
+            console.log("検索した中身" + rows);
+            if (rows != null) {
+                //SQL文
+                let sql = 'update user set city_code = ? where user_id = ?;';
 
-            //データを挿入
-            connection.query(sql, [cityCode, userId], function(err, result) {
-                console.log(result);
-            });
+                //データを更新
+                connection.query(sql, [cityCode, userId], function(err, result) {
+                    console.log("更新" + result);
+                });
+            } else {
+                //SQL文
+                let sql = 'insert into user(user_id, city_code) values(?, ?);';
+
+                //データを挿入
+                connection.query(sql, [userId, cityCode], function(err, result) {
+                    console.log("挿入 " + result);
+                });
+            }
         });
 
 
