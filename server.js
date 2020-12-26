@@ -67,9 +67,6 @@ function insertData(userId, cityCode) {
         });
         // 接続
         connection.connect();
-        console.log(userId);
-        console.log(cityCode);
-
 
         connection.query('select * from user where user_id = ?', userId, function(err, rows, result) {
             console.log("検索した中身" + rows);
@@ -91,7 +88,7 @@ function insertData(userId, cityCode) {
                 });
             }
         });
-
+        consolelog("1");
 
         // 接続終了
         connection.end();
@@ -249,6 +246,7 @@ async function handleEvent(event) {
             if (area3.length == 0) {
                 //選択した地域のシティコードをユーザーIDとセットでuserデータベースに保存する
                 await insertData(event.source.userId, await getCityCode(message));
+                console.log("2");
                 //登録した地域をユーザーに返す
                 responseMessage = {
                     "type": "text",
