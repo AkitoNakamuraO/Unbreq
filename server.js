@@ -88,7 +88,7 @@ function insertData(userId, cityCode) {
                 });
             }
         });
-        resolve(0); //Request timeout防止
+
         // 接続終了
         connection.end();
     });
