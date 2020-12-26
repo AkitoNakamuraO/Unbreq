@@ -67,6 +67,9 @@ function insertData(userId, cityCode) {
         });
         // 接続
         connection.connect();
+        console.log(userId);
+        console.log(cityCode);
+
 
         connection.query('select * from user where user_id = ?', userId, function(err, rows, result) {
             console.log("検索した中身" + rows);
