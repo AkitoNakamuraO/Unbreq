@@ -88,7 +88,7 @@ function insertData(userId, cityCode) {
                 });
             }
         });
-        consolelog("1");
+        console.log("1");
 
         // 接続終了
         connection.end();
