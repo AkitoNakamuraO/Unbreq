@@ -287,7 +287,7 @@ async function handleEvent(event) {
     //「天気教えて」で反応する。
     if (message == '天気教えて') {
         //知りたい時間帯の選択肢を表示する。
-        let timeMessage = require('./time.json');
+        let timeMessage = require('./GettingTheWeather/time.json');
         await client.replyMessage(event.replyToken, timeMessage);
         sem = 1;
     } else if (sem == 1) { //上の天気教えてを通ってからでないとここには入れない
