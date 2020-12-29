@@ -56,6 +56,8 @@ function connectionSql(sql, message) {
 //ユーザーIDと地域のコードをuserデータベースに挿入する関数
 function insertData(userId, cityCode) {
     return new Promise(resolve => {
+        let data = []; //登録されているデータを格納
+
         // requireの設定
         const mysql = require('mysql');
         // MySQLとのコネクションの作成
@@ -69,25 +71,27 @@ function insertData(userId, cityCode) {
         connection.connect();
 
         connection.query('select * from user where user_id = ?', userId, function(err, rows, result) {
-            console.log("検索した中身" + rows[0].user_id);
-            if (rows[0].user_id != userId) {
-                //SQL文
-                let sql = 'update user set city_code = ? where user_id = ?;';
-
-                //データを更新
-                connection.query(sql, [cityCode, userId], function(err, result) {
-                    console.log("更新" + result);
-                });
-            } else {
-                //SQL文
-                let sql = 'insert into user(user_id, city_code) values(?, ?);';
-
-                //データを挿入
-                connection.query(sql, [userId, cityCode], function(err, result) {
-                    console.log("挿入 " + result);
-                });
-            }
+            console.log("検索した中身" + rows[0]);
+            data = rows;
         });
+
+        if (data.user_id == userId) {
+            //SQL文
+            let sql = 'update user set city_code = ? where user_id = ?;';
+
+            //データを更新
+            connection.query(sql, [cityCode, userId], function(err, result) {
+                console.log("更新" + result);
+            });
+        } else {
+            //SQL文
+            let sql = 'insert into user(user_id, city_code) values(?, ?);';
+
+            //データを挿入
+            connection.query(sql, [userId, cityCode], function(err, result) {
+                console.log("挿入 " + result);
+            });
+        }
 
         // 接続終了
         connection.end();
