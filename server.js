@@ -297,6 +297,7 @@ async function handleEvent(event) {
         //timeは選択した時間帯のテキスト
         //getWeatherの返り値(judge)で場合分け
         judge = await getWeather(event, "070030", message);
+        console.log(judge);
         //1は0~30%,2は30~50%,3は50~100%
         if (judge == 1) {
             responseMessage = {
