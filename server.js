@@ -249,7 +249,7 @@ async function handleEvent(event) {
     if (message == '登録') {
         const area1 = ['北海道', '東北', "関東", "中部", "関西", "中国", "四国", "九州・沖縄"]; //１番大きな地域のくくりを格納する
         responseMessage = createMessage(area1); //area1中身ボタンメッセージで返信内容に入れる
-    } else if (message != '登録' && message != '今日傘いる？') { //入力されたテキストが地地域の名前の時処理する
+    } else if (message != '登録' && message != '天気教えて') { //入力されたテキストが地地域の名前の時処理する
         //SQL文
         let sql = 'select * from city where area1 = ?;'; //cityテーブルからmessageと同じ場所をdataに格納
         let data = await connectionSql(sql, message); //データを取得
