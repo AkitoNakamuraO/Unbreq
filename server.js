@@ -110,7 +110,7 @@ function insertData(userData, userId, cityCode) {
                 console.log("更新");
             });
         }
-
+        resolve(0); //Request timeout対策
         // 接続終了
         connection.end();
     });
@@ -268,7 +268,6 @@ async function handleEvent(event) {
                 const userData = await getUserDB(event.source.userId);
                 //選択した地域のシティコードをユーザーIDとセットでuserデータベースに保存する
                 await insertData(userData, event.source.userId, await getCityCode(message));
-                console.log('ここまで');
                 //登録した地域をユーザーに返す
                 responseMessage = {
                     "type": "text",
