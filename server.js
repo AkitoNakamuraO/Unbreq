@@ -52,6 +52,7 @@ function connectionSql(sql, message) {
         connection.end();
     });
 }
+
 //ユーザーIDで検索し、そのデータを返す関数
 function getUserDB(userId) {
     return new Promise(resolve => {
@@ -77,7 +78,7 @@ function getUserDB(userId) {
 }
 
 //ユーザーIDと地域のコードをuserデータベースに挿入する関数
-function insertData(userId, cityCode) {
+function insertData(userData, userId, cityCode) {
     return new Promise(resolve => {
 
         // requireの設定
@@ -92,7 +93,7 @@ function insertData(userId, cityCode) {
         // 接続
         connection.connect();
 
-        if (data.user_id == userId) {
+        if (userData.user_id == userId) {
             //SQL文
             let sql = 'update user set city_code = ? where user_id = ?;';
 
