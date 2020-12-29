@@ -71,10 +71,9 @@ function insertData(userId, cityCode) {
         connection.connect();
 
         connection.query('select * from user where user_id = ?', userId, function(err, rows, result) {
-            console.log("検索した中身" + rows[0]);
             data = rows;
         });
-
+        console.log(data.user_id);
         if (data.user_id == userId) {
             //SQL文
             let sql = 'update user set city_code = ? where user_id = ?;';
