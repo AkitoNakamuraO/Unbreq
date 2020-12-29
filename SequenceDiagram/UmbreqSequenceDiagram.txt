@@ -1,0 +1,16 @@
+title Umbreq
+
+usr->Line:!住んでる場所
+Line->DB:場所の保存
+Line->usr:「どの時間に通知しますか？」
+usr->Line:時間指定!
+Line->DB:時間の保存
+note over usr,Line:0:00~23:59
+
+loop
+Line->DB:userの住んでいる場所を検索
+DB->Line:場所のコードを返す
+Line->API:場所指定
+API->Line:天候取得
+Line->usr:今日傘がいるか通知
+end
