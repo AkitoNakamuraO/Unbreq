@@ -269,7 +269,6 @@ async function handleEvent(event) {
                 console.log(userData);
                 //選択した地域のシティコードをユーザーIDとセットでuserデータベースに保存する
                 await insertData(event.source.userId, await getCityCode(message));
-                console.log("2");
                 //登録した地域をユーザーに返す
                 responseMessage = {
                     "type": "text",
