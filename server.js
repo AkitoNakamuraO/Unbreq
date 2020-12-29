@@ -2,6 +2,7 @@
 
 const line = require('@line/bot-sdk');
 const express = require('express');
+const axios = require('axios');
 
 // create LINE SDK config from env variables
 const config = {
@@ -277,15 +278,118 @@ async function handleEvent(event) {
         }
     }
 
-    // 今日傘がいるかどうかを通知する
-    if (event.message.text == '今日傘いる？') {
+
+
+    //semは場合分けに使う
+    let sem = 0;
+    let judge;
+
+    //「天気教えて」で反応する。
+    if (message == '天気教えて') {
+        //知りたい時間帯の選択肢を表示する。
+        let timeMessage = require('./time.json');
+        await client.replyMessage(event.replyToken, timeMessage);
+        sem = 1;
+    } else if (sem == 1) { //上の天気教えてを通ってからでないとここには入れない
+        sem = 0;
+        //getWather(event,codeId,time)で傘が必要か判断する
+        //codeIdは各地域のコード(time.jsonを参照)
+        //timeは選択した時間帯のテキスト
+        //getWeatherの返り値(judge)で場合分け
+        judge = await getWeather(event, "070030", message);
+        //1は0~30%,2は30~50%,3は50~100%
+        if (judge == 1) {
+            responseMessage = {
+                type: 'text',
+                text: '今日傘いらないよ！'
+            };
+        } else if (judge == 2) {
+            responseMessage = {
+                type: 'text',
+                text: '今日折り畳み傘持ってくといいかも！'
+            };
+        } else if (judge == 3) {
+            responseMessage = {
+                type: 'text',
+                text: '今日傘いるよ！'
+            };
+        }
+    } else { //天気教えて以外はここに入る
         responseMessage = {
             type: 'text',
-            text: await getUserCode(event.source.userId)
+            text: '天気教えてって言ってね！'
         };
     }
 
     return client.replyMessage(event.replyToken, responseMessage);
+}
+
+
+//天気取得し、傘が必要かを返す関数
+async function getWeather(event, codeId, time) {
+    let pushText;
+    let pushText2, pushText3, pushText4;
+    let count = 0;
+
+    //天気予報APIから取得した情報をobjという変数に格納
+    const obj = await returnObject(codeId);
+    //選択肢の場合分け
+    if (time == '06~12時の時間帯') {
+        pushText = obj.forecasts[1].chanceOfRain['06-12'];
+    } else if (time == '12~18時の時間帯') {
+        pushText = obj.forecasts[1].chanceOfRain['12-18'];
+    } else if (time == '18~24時の時間帯') {
+        pushText = obj.forecasts[1].chanceOfRain['18-24'];
+    } else { //ここは降水確率の一覧表示
+        count = 1;
+        pushText2 = obj.forecasts[1].chanceOfRain['06-12'];
+        pushText3 = obj.forecasts[1].chanceOfRain['12-18'];
+        pushText4 = obj.forecasts[1].chanceOfRain['18-24'];
+        client.replyMessage(event.replyToken, {
+            type: 'text',
+            text: '降水確率一覧' +
+                '\n6-12時\n--> ' + pushText2 +
+                '\n12-18時\n--> ' + pushText3 +
+                '\n18-24時\n--> ' + pushText4 +
+                '\n(--%となる場合は天気を読み取りできません)'
+        });
+    }
+    if (count == 1) {
+        return 0;
+    } else {
+        //pushTextデータがstring型の◯◯％（50%とか）だったから、これの数値を取り出してint型にする。
+        let reg = new RegExp(/^[0-9]+$/); //数値を取り出すためのもの
+        let st2Num = reg.test(pushText); //ここでst2Numに数値を格納
+        //下のように降水確率で場合分け
+        if (st2Num < 30) return 1;
+        else if (st2Num >= 30 && st2Num < 50) return 2;
+        else if (st2Num >= 50) return 3;
+    }
+}
+
+/*引数として地域コードを、
+返り値はJSON型オブジェクトを返す
+関数内のrequest等は https://www.sejuku.net/blog/80176 を参照した。
+*/
+function returnObject(codeId) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            //axiosを使って天気APIにアクセス
+            //天気予報APIを使う 070030は会津若松のID番号             
+            var request = require('request');
+            var options = {
+                url: 'https://weather.tsukumijima.net/api/forecast/city/' + codeId,
+                method: 'GET',
+                json: true
+            }
+            request(options, function(error, response, body) {
+                //bodyにJSONデータがある。（天気の情報が入っている）
+                //resolve(??);で、??をreturnする。
+                resolve(body);
+            })
+        }, 500);
+
+    });
 }
 
 // listen on port
