@@ -52,12 +52,9 @@ function connectionSql(sql, message) {
         connection.end();
     });
 }
-
-//ユーザーIDと地域のコードをuserデータベースに挿入する関数
-function insertData(userId, cityCode) {
+//ユーザーIDで検索し、そのデータを返す関数
+function getUserDB(userId) {
     return new Promise(resolve => {
-        let data = []; //登録されているデータを格納
-
         // requireの設定
         const mysql = require('mysql');
         // MySQLとのコネクションの作成
@@ -71,18 +68,37 @@ function insertData(userId, cityCode) {
         connection.connect();
 
         connection.query('select * from user where user_id = ?', userId, function(err, rows, result) {
-            data = rows;
-            console.log("rowsのuserid" + rows.user_id);
+            resolve(rows);
         });
-        console.log("data" + data);
-        console.log("data.userid" + data.user_id);
+
+        // 接続終了
+        connection.end();
+    });
+}
+
+//ユーザーIDと地域のコードをuserデータベースに挿入する関数
+function insertData(userId, cityCode) {
+    return new Promise(resolve => {
+
+        // requireの設定
+        const mysql = require('mysql');
+        // MySQLとのコネクションの作成
+        const connection = mysql.createConnection({
+            host: 'us-cdbr-east-02.cleardb.com',
+            user: 'ba34e08d66d9ca',
+            password: 'f7a13d7b',
+            database: 'heroku_ce160c129bb4170'
+        });
+        // 接続
+        connection.connect();
+
         if (data.user_id == userId) {
             //SQL文
             let sql = 'update user set city_code = ? where user_id = ?;';
 
             //データを更新
             connection.query(sql, [cityCode, userId], function(err, result) {
-                console.log("更新" + result);
+                console.log("更新");
             });
         } else {
             //SQL文
@@ -90,7 +106,7 @@ function insertData(userId, cityCode) {
 
             //データを挿入
             connection.query(sql, [userId, cityCode], function(err, result) {
-                console.log("挿入 " + result);
+                console.log("挿入 ");
             });
         }
 
@@ -248,6 +264,8 @@ async function handleEvent(event) {
             responseMessage = createMessage(area3); //area3中身ボタンメッセージで返信内容に入れる
 
             if (area3.length == 0) {
+                const userData = await getUserDB(event.source.userId);
+                console.log(userData);
                 //選択した地域のシティコードをユーザーIDとセットでuserデータベースに保存する
                 await insertData(event.source.userId, await getCityCode(message));
                 console.log("2");
