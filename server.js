@@ -263,9 +263,8 @@ async function handleEvent(event) {
     if (event.message.text == '今日傘いる？') {
         responseMessage = {
             type: 'text',
-            text: 'いるよ〜'
+            text: await getUserCode(event.source.userId)
         };
-        // console.log(await getUserCode(event.source.userId));
     }
 
     return client.replyMessage(event.replyToken, responseMessage);
