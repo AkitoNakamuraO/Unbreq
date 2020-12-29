@@ -93,7 +93,7 @@ function insertData(userData, userId, cityCode) {
         // 接続
         connection.connect();
         console.log(userData);
-        if (userData == []) {
+        if (userData.length <= 0) {
             //SQL文
             let sql = 'insert into user(user_id, city_code) values(?, ?);';
 
@@ -266,7 +266,6 @@ async function handleEvent(event) {
 
             if (area3.length == 0) {
                 const userData = await getUserDB(event.source.userId);
-                console.log(userData);
                 //選択した地域のシティコードをユーザーIDとセットでuserデータベースに保存する
                 await insertData(userData, event.source.userId, await getCityCode(message));
                 //登録した地域をユーザーに返す
