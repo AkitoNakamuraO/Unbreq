@@ -93,21 +93,21 @@ function insertData(userData, userId, cityCode) {
         // 接続
         connection.connect();
 
-        if (userData.user_id == userId) {
-            //SQL文
-            let sql = 'update user set city_code = ? where user_id = ?;';
-
-            //データを更新
-            connection.query(sql, [cityCode, userId], function(err, result) {
-                console.log("更新");
-            });
-        } else {
+        if (userData == []) {
             //SQL文
             let sql = 'insert into user(user_id, city_code) values(?, ?);';
 
             //データを挿入
             connection.query(sql, [userId, cityCode], function(err, result) {
                 console.log("挿入 ");
+            });
+        } else {
+            //SQL文
+            let sql = 'update user set city_code = ? where user_id = ?;';
+
+            //データを更新
+            connection.query(sql, [cityCode, userId], function(err, result) {
+                console.log("更新");
             });
         }
 
