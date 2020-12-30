@@ -246,7 +246,7 @@ async function handleEvent(event) {
     let area3 = []; //シティコードを持つ地域を格納する
 
     //天気予報を返す処理
-    if (message == '天気教えて' || message == '06~12時の時間帯' || message == '12~18時の時間帯' || message == '18~24時の時間帯' || message == '今日の降水確率一覧') {
+    if (message == '天気教えて' || message == 'a' || message == '12~18時の時間帯' || message == '18~24時の時間帯' || message == '今日の降水確率一覧') {
         //分岐用
         let judge;
 
@@ -256,7 +256,7 @@ async function handleEvent(event) {
             let timeMessage = require('./GettingTheWeather/time.json');
             await client.replyMessage(event.replyToken, timeMessage);
             sem = 1;
-        } else if (message == '06~12時の時間帯' || message == '12~18時の時間帯' || message == '18~24時の時間帯' || message == '今日の降水確率一覧') {
+        } else if (message == 'a' || message == '12~18時の時間帯' || message == '18~24時の時間帯' || message == '今日の降水確率一覧') {
             console.log('通りました');
             //getWather(event,codeId,time)で傘が必要か判断する
             //codeIdは各地域のコード(time.jsonを参照)
