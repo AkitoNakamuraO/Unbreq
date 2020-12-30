@@ -134,7 +134,7 @@ function getCityCode(name) {
         //データを挿入
         connection.query(sql, name, function(err, rows, fields) {
             console.log(rows);
-            if (rows != undefined) {
+            if (rows != []) {
                 resolve(rows[0].code);
             } else {
                 reject('エラー ');
