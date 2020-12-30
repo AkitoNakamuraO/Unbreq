@@ -273,7 +273,6 @@ async function handleEvent(event) {
                 }
             } else {
                 judge = await getWeather(event, userCode, message);
-                console.log(judge);
                 //1は0~30%,2は30~50%,3は50~100%
                 if (judge == 1) {
                     responseMessage = {
@@ -372,10 +371,7 @@ async function getWeather(event, codeId, time) {
     if (count == 1) {
         return 0;
     } else {
-        //pushTextデータがstring型の◯◯％（50%とか）だったから、これの数値を取り出してint型にする。
-        let reg = new RegExp(/^[0-9]+$/); //数値を取り出すためのもの
-        let st2Num = pushText.slice(0, -1); //ここでst2Numに数値を格納
-        console.log(st2Num);
+        let st2Num = pushText.slice(0, -1); //%を消去する
         //下のように降水確率で場合分け
         if (st2Num < 30) return 1;
         else if (st2Num >= 30 && st2Num < 50) return 2;
