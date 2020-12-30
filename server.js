@@ -273,6 +273,7 @@ async function handleEvent(event) {
                 }
             } else {
                 judge = await getWeather(event, userCode, message);
+                console.log(judge);
                 //1は0~30%,2は30~50%,3は50~100%
                 if (judge == 1) {
                     responseMessage = {
