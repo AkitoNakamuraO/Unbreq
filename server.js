@@ -305,21 +305,22 @@ async function handleEvent(event) {
                 //すで登録しているユーザーかどうかを判定するためにデータベースの中身を調べる
                 const userData = await getUserDB(event.source.userId);
                 const cityCode = await getCityCode(message);
-
+                console.log(cityCode);
                 if (cityCode == undefined) {
                     responseMessage = {
                         "type": "text",
                         "text": "地域を登録してね"
                     };
 
+                } else {
+                    //選択した地域のシティコードをユーザーIDとセットでuserデータベースに保存する
+                    await insertData(userData, event.source.userId, cityCode);
+                    //登録した地域をユーザーに返す
+                    responseMessage = {
+                        "type": "text",
+                        "text": "地域を" + message + "に登録しました。"
+                    };
                 }
-                //選択した地域のシティコードをユーザーIDとセットでuserデータベースに保存する
-                await insertData(userData, event.source.userId, cityCode);
-                //登録した地域をユーザーに返す
-                responseMessage = {
-                    "type": "text",
-                    "text": "地域を" + message + "に登録しました。"
-                };
             }
         }
     }
