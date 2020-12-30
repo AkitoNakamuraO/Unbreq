@@ -289,10 +289,7 @@ async function handleEvent(event) {
             };
         }
 
-    }
-
-    // ユーザー情報を登録する
-    if (message == '登録') {
+    } else if (message == '登録') { // ユーザー情報を登録する
         const area1 = ['北海道', '東北', "関東", "中部", "関西", "中国", "四国", "九州・沖縄"]; //１番大きな地域のくくりを格納する
         responseMessage = createMessage(area1); //area1中身ボタンメッセージで返信内容に入れる
     } else if (message != '登録') { //入力されたテキストが地地域の名前の時処理する
