@@ -1,31 +1,30 @@
 {
-  "type": "template",
-  "altText": "this is a buttons template",
-  "template": {
-      "type": "buttons",
-      "actions": [
-          {
-              "type": "message",
-              "label": "06~12時の時間帯",
-              "text": "06~12時の時間帯"
-          },
-          {
-              "type": "message",
-              "label": "12~18時の時間帯",
-              "text": "12~18時の時間帯"
-          },
-          {
-              "type": "message",
-              "label": "18~24時の時間帯",
-              "text": "18~24時の時間帯"
-          },
-          {
-            "type": "message",
-            "label": "今日の降水確率一覧",
-            "text": "今日の降水確率一覧"
-        }
-      ],
-  "title": "どの時間帯を知りたいですか？",
-  "text": "以下の選択肢から選んでください。"
-}
+    "type": "template",
+    "altText": "天気予報の時間を選択してください",
+    "template": {
+        "type": "buttons",
+        "actions": [{
+                "type": "message",
+                "label": "06~12時の時間帯",
+                "text": "06~12時の時間帯"
+            },
+            {
+                "type": "message",
+                "label": "12~18時の時間帯",
+                "text": "12~18時の時間帯"
+            },
+            {
+                "type": "message",
+                "label": "18~24時の時間帯",
+                "text": "18~24時の時間帯"
+            },
+            {
+                "type": "message",
+                "label": "今日の降水確率一覧",
+                "text": "今日の降水確率一覧"
+            }
+        ],
+        "title": "どの時間帯を知りたいですか？",
+        "text": "以下の選択肢から選んでください。"
+    }
 }

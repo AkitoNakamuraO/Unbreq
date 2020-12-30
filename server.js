@@ -93,23 +93,19 @@ function insertData(userData, userId, cityCode) {
         });
         // 接続
         connection.connect();
-        console.log(userData);
+
         if (userData.length <= 0) {
             //SQL文
             let sql = 'insert into user(user_id, city_code) values(?, ?);';
 
             //データを挿入
-            connection.query(sql, [userId, cityCode], function(err, result) {
-                console.log("挿入 ");
-            });
+            connection.query(sql, [userId, cityCode], function(err, result) {});
         } else {
             //SQL文
             let sql = 'update user set city_code = ? where user_id = ?;';
 
             //データを更新
-            connection.query(sql, [cityCode, userId], function(err, result) {
-                console.log("更新");
-            });
+            connection.query(sql, [cityCode, userId], function(err, result) {});
         }
         resolve(0); //Request timeout対策
         // 接続終了
@@ -255,8 +251,7 @@ async function handleEvent(event) {
         if (message == '天気教えて') {
             //知りたい時間帯の選択肢を表示する。
             let timeMessage = require('./GettingTheWeather/time.json');
-            await client.replyMessage(event.replyToken, timeMessage);
-            sem = 1;
+            responseMessage = timeMessage;
         } else if (message == '06~12時の時間帯' || message == '12~18時の時間帯' || message == '18~24時の時間帯' || message == '今日の降水確率一覧') {
             console.log('通りました2-----------------------------------------------------------------------------');
             //getWather(event,codeId,time)で傘が必要か判断する
