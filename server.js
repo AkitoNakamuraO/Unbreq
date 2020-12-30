@@ -245,6 +245,52 @@ async function handleEvent(event) {
     let area2 = []; //２番目に大な地域のくくりを格納する
     let area3 = []; //シティコードを持つ地域を格納する
 
+    //天気予報を返す処理
+    if (message == '天気教えて' || message == '06~12時の時間帯' || message == '12~18時の時間帯' || message == '18~24時の時間帯' || message == '今日の降水確率一覧') {
+        //semは場合分けに使う
+        let sem = 0;
+        let judge;
+
+        //「天気教えて」で反応する。
+        if (message == '天気教えて') {
+            //知りたい時間帯の選択肢を表示する。
+            let timeMessage = require('./GettingTheWeather/time.json');
+            await client.replyMessage(event.replyToken, timeMessage);
+            sem = 1;
+        } else if (sem == 1) { //上の天気教えてを通ってからでないとここには入れない
+            sem = 0;
+            //getWather(event,codeId,time)で傘が必要か判断する
+            //codeIdは各地域のコード(time.jsonを参照)
+            //timeは選択した時間帯のテキスト
+            //getWeatherの返り値(judge)で場合分け
+            judge = await getWeather(event, "070030", message);
+            console.log(judge);
+            //1は0~30%,2は30~50%,3は50~100%
+            if (judge == 1) {
+                responseMessage = {
+                    type: 'text',
+                    text: '今日傘いらないよ！'
+                };
+            } else if (judge == 2) {
+                responseMessage = {
+                    type: 'text',
+                    text: '今日折り畳み傘持ってくといいかも！'
+                };
+            } else if (judge == 3) {
+                responseMessage = {
+                    type: 'text',
+                    text: '今日傘いるよ！'
+                };
+            }
+        } else { //天気教えて以外はここに入る
+            responseMessage = {
+                type: 'text',
+                text: '天気教えてって言ってね！'
+            };
+        }
+
+    }
+
     // ユーザー情報を登録する
     if (message == '登録') {
         const area1 = ['北海道', '東北', "関東", "中部", "関西", "中国", "四国", "九州・沖縄"]; //１番大きな地域のくくりを格納する
@@ -266,60 +312,15 @@ async function handleEvent(event) {
             responseMessage = createMessage(area3); //area3中身ボタンメッセージで返信内容に入れる
 
             if (area3.length == 0) {
-                //semは場合分けに使う
-                let sem = 0;
-                let judge;
-
-                //「天気教えて」で反応する。
-                if (message == '天気教えて') {
-                    //知りたい時間帯の選択肢を表示する。
-                    let timeMessage = require('./GettingTheWeather/time.json');
-                    await client.replyMessage(event.replyToken, timeMessage);
-                    sem = 1;
-                } else if (sem == 1) { //上の天気教えてを通ってからでないとここには入れない
-                    sem = 0;
-                    //getWather(event,codeId,time)で傘が必要か判断する
-                    //codeIdは各地域のコード(time.jsonを参照)
-                    //timeは選択した時間帯のテキスト
-                    //getWeatherの返り値(judge)で場合分け
-                    judge = await getWeather(event, "070030", message);
-                    console.log(judge);
-                    //1は0~30%,2は30~50%,3は50~100%
-                    if (judge == 1) {
-                        responseMessage = {
-                            type: 'text',
-                            text: '今日傘いらないよ！'
-                        };
-                    } else if (judge == 2) {
-                        responseMessage = {
-                            type: 'text',
-                            text: '今日折り畳み傘持ってくといいかも！'
-                        };
-                    } else if (judge == 3) {
-                        responseMessage = {
-                            type: 'text',
-                            text: '今日傘いるよ！'
-                        };
-                    }
-                } else {
-                    //すで登録しているユーザーかどうかを判定するためにデータベースの中身を調べる
-                    const userData = await getUserDB(event.source.userId);
-                    //選択した地域のシティコードをユーザーIDとセットでuserデータベースに保存する
-                    await insertData(userData, event.source.userId, await getCityCode(message));
-                    //登録した地域をユーザーに返す
-                    responseMessage = {
-                        "type": "text",
-                        "text": "地域を" + message + "に登録しました。"
-                    };
-                }
-
-                // else { //天気教えて以外はここに入る
-                //     responseMessage = {
-                //         type: 'text',
-                //         text: '天気教えてって言ってね！'
-                //     };
-                // }
-
+                //すで登録しているユーザーかどうかを判定するためにデータベースの中身を調べる
+                const userData = await getUserDB(event.source.userId);
+                //選択した地域のシティコードをユーザーIDとセットでuserデータベースに保存する
+                await insertData(userData, event.source.userId, await getCityCode(message));
+                //登録した地域をユーザーに返す
+                responseMessage = {
+                    "type": "text",
+                    "text": "地域を" + message + "に登録しました。"
+                };
             }
         }
     }
@@ -343,7 +344,7 @@ async function getWeather(event, codeId, time) {
         pushText = obj.forecasts[1].chanceOfRain['12-18'];
     } else if (time == '18~24時の時間帯') {
         pushText = obj.forecasts[1].chanceOfRain['18-24'];
-    } else { //ここは降水確率の一覧表示
+    } else if (time == '今日の降水確率一覧') { //ここは降水確率の一覧表示
         count = 1;
         pushText2 = obj.forecasts[1].chanceOfRain['06-12'];
         pushText3 = obj.forecasts[1].chanceOfRain['12-18'];
