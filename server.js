@@ -305,7 +305,6 @@ async function handleEvent(event) {
                 //すで登録しているユーザーかどうかを判定するためにデータベースの中身を調べる
                 const userData = await getUserDB(event.source.userId);
                 const cityCode = await getCityCode(message);
-                console.log(cityCode);
                 if (cityCode == undefined) {
                     responseMessage = {
                         "type": "text",
