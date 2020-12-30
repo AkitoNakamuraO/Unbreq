@@ -344,9 +344,9 @@ async function getWeather(event, codeId, time) {
         client.replyMessage(event.replyToken, {
             type: 'text',
             text: '降水確率一覧' +
-                '\n6-12時\n--> ' + pushText2 +
-                '\n12-18時\n--> ' + pushText3 +
-                '\n18-24時\n--> ' + pushText4 +
+                '\n6-12時 --> ' + pushText2 +
+                '\n12-18時 --> ' + pushText3 +
+                '\n18-24時 --> ' + pushText4 +
                 '\n(--%となる場合は天気を読み取りできません)'
         });
     }
