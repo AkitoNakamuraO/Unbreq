@@ -301,6 +301,16 @@ async function handleEvent(event) {
                             text: '今日傘いるよ！'
                         };
                     }
+                } else {
+                    //すで登録しているユーザーかどうかを判定するためにデータベースの中身を調べる
+                    const userData = await getUserDB(event.source.userId);
+                    //選択した地域のシティコードをユーザーIDとセットでuserデータベースに保存する
+                    await insertData(userData, event.source.userId, await getCityCode(message));
+                    //登録した地域をユーザーに返す
+                    responseMessage = {
+                        "type": "text",
+                        "text": "地域を" + message + "に登録しました。"
+                    };
                 }
 
                 // else { //天気教えて以外はここに入る
@@ -310,15 +320,6 @@ async function handleEvent(event) {
                 //     };
                 // }
 
-                //すで登録しているユーザーかどうかを判定するためにデータベースの中身を調べる
-                const userData = await getUserDB(event.source.userId);
-                //選択した地域のシティコードをユーザーIDとセットでuserデータベースに保存する
-                await insertData(userData, event.source.userId, await getCityCode(message));
-                //登録した地域をユーザーに返す
-                responseMessage = {
-                    "type": "text",
-                    "text": "地域を" + message + "に登録しました。"
-                };
             }
         }
     }
