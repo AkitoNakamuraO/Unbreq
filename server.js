@@ -375,7 +375,8 @@ async function getWeather(event, codeId, time) {
         //pushTextデータがstring型の◯◯％（50%とか）だったから、これの数値を取り出してint型にする。
         let reg = new RegExp(/^[0-9]+$/); //数値を取り出すためのもの
         console.log(reg);
-        let st2Num = reg.text(pushText); //ここでst2Numに数値を格納
+        let st2Num = reg.test(pushText); //ここでst2Numに数値を格納
+        console.log(st2Num);
         //下のように降水確率で場合分け
         if (st2Num < 30) return 1;
         else if (st2Num >= 30 && st2Num < 50) return 2;
