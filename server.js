@@ -133,7 +133,6 @@ function getCityCode(name) {
 
         //データを挿入
         connection.query(sql, name, function(err, rows, fields) {
-            console.log(rows);
             if (rows.length > 0) {
                 resolve(rows[0].code);
             } else {
@@ -223,7 +222,11 @@ function getUserCode(userId) {
 
         //データを取得
         connection.query(sql, userId, function(err, rows, fields) {
-            resolve(rows[0].city_code);
+            if (rows.length > 0) {
+                resolve(rows[0].city_code);
+            } else {
+                resolve(undefined);
+            }
         });
 
         // 接続終了
@@ -262,23 +265,31 @@ async function handleEvent(event) {
             //codeIdは各地域のコード(time.jsonを参照)
             //timeは選択した時間帯のテキスト
             //getWeatherの返り値(judge)で場合分け
-            judge = await getWeather(event, await getUserCode(event.source.userId), message);
-            //1は0~30%,2は30~50%,3は50~100%
-            if (judge == 1) {
+            const userCode = await getUserCode(event.source.userId);
+            if (userCode == undefined) {
                 responseMessage = {
-                    type: 'text',
-                    text: '今日傘いらないよ！'
-                };
-            } else if (judge == 2) {
-                responseMessage = {
-                    type: 'text',
-                    text: '今日折り畳み傘持ってくといいかも！'
-                };
-            } else if (judge == 3) {
-                responseMessage = {
-                    type: 'text',
-                    text: '今日傘いるよ！'
-                };
+                    "type": "text",
+                    "text": "地域を登録してね"
+                }
+            } else {
+                judge = await getWeather(event, userCode, message);
+                //1は0~30%,2は30~50%,3は50~100%
+                if (judge == 1) {
+                    responseMessage = {
+                        type: 'text',
+                        text: '今日傘いらないよ！'
+                    };
+                } else if (judge == 2) {
+                    responseMessage = {
+                        type: 'text',
+                        text: '今日折り畳み傘持ってくといいかも！'
+                    };
+                } else if (judge == 3) {
+                    responseMessage = {
+                        type: 'text',
+                        text: '今日傘いるよ！'
+                    };
+                }
             }
         }
 
@@ -308,7 +319,7 @@ async function handleEvent(event) {
                 if (cityCode == undefined) {
                     responseMessage = {
                         "type": "text",
-                        "text": "地域を登録してね"
+                        "text": "この入力は受け付けてないよ"
                     };
 
                 } else {
@@ -317,7 +328,7 @@ async function handleEvent(event) {
                     //登録した地域をユーザーに返す
                     responseMessage = {
                         "type": "text",
-                        "text": "地域を" + message + "に登録しました。"
+                        "text": "地域を" + message + "に登録したよ"
                     };
                 }
             }
