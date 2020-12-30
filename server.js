@@ -256,7 +256,7 @@ async function handleEvent(event) {
             let timeMessage = require('./GettingTheWeather/time.json');
             await client.replyMessage(event.replyToken, timeMessage);
             sem = 1;
-        } else {
+        } else if (message == '06~12時の時間帯' || message == '12~18時の時間帯' || message == '18~24時の時間帯' || message == '今日の降水確率一覧') {
             //getWather(event,codeId,time)で傘が必要か判断する
             //codeIdは各地域のコード(time.jsonを参照)
             //timeは選択した時間帯のテキスト
@@ -280,12 +280,13 @@ async function handleEvent(event) {
                     text: '今日傘いるよ！'
                 };
             }
-        } else { //天気教えて以外はここに入る
-            responseMessage = {
-                type: 'text',
-                text: '天気教えてって言ってね！'
-            };
         }
+        // else { //天気教えて以外はここに入る
+        //     responseMessage = {
+        //         type: 'text',
+        //         text: '天気教えてって言ってね！'
+        //     };
+        // }
 
     } else if (message == '登録') { // ユーザー情報を登録する
         const area1 = ['北海道', '東北', "関東", "中部", "関西", "中国", "四国", "九州・沖縄"]; //１番大きな地域のくくりを格納する
