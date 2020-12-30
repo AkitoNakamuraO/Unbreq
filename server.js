@@ -137,7 +137,7 @@ function getCityCode(name) {
             if (rows.length > 0) {
                 resolve(rows[0].code);
             } else {
-                reject('エラー ');
+                resolve(undefined);
             }
 
         });
@@ -281,12 +281,6 @@ async function handleEvent(event) {
                 };
             }
         }
-        // else { //天気教えて以外はここに入る
-        //     responseMessage = {
-        //         type: 'text',
-        //         text: '天気教えてって言ってね！'
-        //     };
-        // }
 
     } else if (message == '登録') { // ユーザー情報を登録する
         const area1 = ['北海道', '東北', "関東", "中部", "関西", "中国", "四国", "九州・沖縄"]; //１番大きな地域のくくりを格納する
@@ -310,8 +304,17 @@ async function handleEvent(event) {
             if (area3.length == 0) {
                 //すで登録しているユーザーかどうかを判定するためにデータベースの中身を調べる
                 const userData = await getUserDB(event.source.userId);
+                const cityCode = await getCityCode(message);
+
+                if (cityCode == undefined) {
+                    responseMessage = {
+                        "type": "text",
+                        "text": "地域を登録してね"
+                    };
+
+                }
                 //選択した地域のシティコードをユーザーIDとセットでuserデータベースに保存する
-                await insertData(userData, event.source.userId, await getCityCode(message));
+                await insertData(userData, event.source.userId, cityCode);
                 //登録した地域をユーザーに返す
                 responseMessage = {
                     "type": "text",
