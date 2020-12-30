@@ -247,7 +247,7 @@ async function handleEvent(event) {
 
     //天気予報を返す処理
     if (message == '天気教えて' || message == '06~12時の時間帯' || message == '12~18時の時間帯' || message == '18~24時の時間帯' || message == '今日の降水確率一覧') {
-        console.log('通りました1');
+        console.log('通りました1-----------------------------------------------------------------------------');
         //分岐用
         let judge;
 
@@ -258,13 +258,12 @@ async function handleEvent(event) {
             await client.replyMessage(event.replyToken, timeMessage);
             sem = 1;
         } else if (message == '06~12時の時間帯' || message == '12~18時の時間帯' || message == '18~24時の時間帯' || message == '今日の降水確率一覧') {
-            console.log('通りました2');
+            console.log('通りました2-----------------------------------------------------------------------------');
             //getWather(event,codeId,time)で傘が必要か判断する
             //codeIdは各地域のコード(time.jsonを参照)
             //timeは選択した時間帯のテキスト
             //getWeatherの返り値(judge)で場合分け
             judge = await getWeather(event, "070030", message);
-            console.log(judge);
             //1は0~30%,2は30~50%,3は50~100%
             if (judge == 1) {
                 responseMessage = {
